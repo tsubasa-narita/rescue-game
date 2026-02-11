@@ -654,151 +654,226 @@ body {
 /* ===========================================
    Phase 3: Mission Map
    =========================================== */
+/* ===========================================
+   Phase 3: Photo Mission
+   =========================================== */
 .mission-bg {
+    /* グラデーション背景に戻す */
     background: linear-gradient(180deg, #1B5E20 0%, #2E7D32 40%, #388E3C 100%);
+    padding: 20px 16px;
+    position: relative;
+    overflow-y: auto;
 }
 
-.map-container {
+.photo-view {
     width: 100%;
-    max-width: 380px;
-    position: relative;
-    padding: 20px 8px;
-    margin: 8px 0;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
 }
 
-.map-track {
+.photo-card-frame {
+    background: white;
+    padding: 12px 12px 32px 12px;
+    border-radius: 4px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    transform: rotate(-2deg);
+    width: 100%;
+    max-width: 320px;
+    transition: transform 0.3s;
+    position: relative;
+}
+
+.photo-card-frame::after {
+    /* Masking tape look */
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%) rotate(2deg);
+    width: 120px;
+    height: 30px;
+    background: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.photo-card-frame:hover {
+    transform: rotate(0) scale(1.02);
+}
+
+.photo-header {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    position: relative;
-}
-
-.map-node {
-    display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 4px;
-    z-index: 2;
-    transition: all 0.3s ease;
+    margin-bottom: 12px;
+    font-weight: 900;
+    color: #555;
+    font-size: 1rem;
 }
 
-.node-icon {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.15);
-    border: 3px solid rgba(255, 255, 255, 0.3);
+.photo-pin {
+    font-size: 1.4rem;
+    filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.2));
+}
+
+.photo-display-area {
+    width: 100%;
+    aspect-ratio: 4/3;
+    background: #f0f0f0;
+    border: 2px dashed #ccc;
+    position: relative;
+    overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.3rem;
-    transition: all 0.3s ease;
 }
 
-.map-node.active .node-icon {
+.current-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.photo-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: #aaa;
+}
+
+.placeholder-icon {
+    font-size: 3rem;
+}
+
+.placeholder-text {
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+/* Progress Bar */
+.progress-container {
+    width: 100%;
+    max-width: 340px;
+    margin-bottom: 20px;
+}
+
+.progress-bar {
+    height: 12px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 6px;
+    position: relative;
+    margin-bottom: 12px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--accent);
+    width: 0%;
+    transition: width 0.5s ease;
+    box-shadow: 0 0 10px var(--accent);
+}
+
+.progress-steps {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 4px;
+}
+
+.step-dot {
+    width: 36px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    transition: all 0.3s;
+    border: 2px solid transparent;
+}
+
+.step-dot.active {
     background: white;
+    transform: scale(1.2);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
     border-color: var(--accent);
-    box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
-    animation: nodeGlow 1.5s ease-in-out infinite;
+    animation: pulseMarker 1.5s infinite;
 }
 
-.map-node.completed .node-icon {
-    background: var(--success);
-    border-color: white;
-}
-
-@keyframes nodeGlow {
+@keyframes pulseMarker {
 
     0%,
     100% {
-        box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+        transform: scale(1.2);
     }
 
     50% {
-        box-shadow: 0 0 25px rgba(255, 215, 0, 0.9);
+        transform: scale(1.3);
     }
 }
 
-.node-label {
-    font-size: 0.65rem;
+.step-dot.completed {
+    background: var(--success);
+    color: white;
+    border-color: white;
+}
+
+/* Settings Photo Upload */
+.photo-setting-section {
+    margin-top: 24px;
+    border-top: 2px dashed #ddd;
+    padding-top: 20px;
+}
+
+.photo-setting-section h3 {
+    margin-bottom: 16px;
+    color: var(--primary);
+    text-shadow: none;
+    font-size: 1.1rem;
     font-weight: 700;
-    color: rgba(255, 255, 255, 0.8);
-    text-align: center;
-    max-width: 52px;
 }
 
-.map-path {
-    flex: 1;
-    height: 4px;
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 2px;
-    margin: 0 -4px;
-    z-index: 1;
-    align-self: center;
-    margin-bottom: 18px;
+.photo-upload-group {
+    margin-bottom: 20px;
+    background: #f8f8f8;
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid #ebebeb;
 }
 
-/* Map character marker */
-.map-character {
-    position: absolute;
-    bottom: 100%;
-    left: 0;
-    width: 40px;
-    height: 40px;
-    transform: translateX(-50%);
-    transition: left 0.8s ease-in-out;
-    z-index: 3;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
+.photo-upload-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 700;
+    color: var(--text);
+    font-size: 0.95rem;
 }
 
-.map-char-img {
+.photo-upload-group input[type="file"] {
     width: 100%;
-    height: 100%;
-    object-fit: contain;
+    font-size: 0.9rem;
+    color: var(--text);
+    background: white;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
 }
 
-/* Items collected */
-.items-collected {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: rgba(255, 255, 255, 0.1);
-    padding: 10px 16px;
-    border-radius: var(--radius);
-    margin: 8px 0;
+.preview-thumb {
+    margin-top: 12px;
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.items-label {
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: rgba(255, 255, 255, 0.8);
-}
-
-.items-list {
-    display: flex;
-    gap: 6px;
-}
-
-.item-icon {
-    font-size: 1.4rem;
-}
-
-.item-bounce {
-    animation: itemBounce 0.5s ease-out;
-}
-
-@keyframes itemBounce {
-    0% {
-        transform: scale(0) rotate(-180deg);
-    }
-
-    60% {
-        transform: scale(1.3) rotate(10deg);
-    }
-
-    100% {
-        transform: scale(1) rotate(0);
-    }
+.preview-thumb.hidden {
+    display: none;
 }
 
 .map-bubble {

@@ -90,48 +90,42 @@
             </div>
         </section>
 
-        <!-- ===== Phase 3: 移動ミッション ===== -->
+        <!-- ===== Phase 3: 移動ミッション (Leaflet) ===== -->
         <section id="phase3" class="phase phase-3 hidden">
             <div class="phase-bg mission-bg">
-                <header class="phase-header">
-                    <h1 class="phase-title">🗺️ レスキューマップ</h1>
-                </header>
-
-                <!-- すごろく風マップ -->
-                <div class="map-container">
-                    <div class="map-track">
-                        <div class="map-node start-node active" data-cp="start">
-                            <div class="node-icon">🏫</div>
-                            <div class="node-label">スタート</div>
+                <!-- 写真コンテナ -->
+                <div id="photo-view" class="photo-view">
+                    <div class="photo-card-frame">
+                        <div class="photo-header">
+                            <span class="photo-pin">📌</span>
+                            <span id="next-destination-text">つぎの もくひょう</span>
+                            <span class="photo-pin">📌</span>
                         </div>
-                        <div class="map-path"></div>
-                        <div class="map-node" data-cp="0">
-                            <div class="node-icon">🔒</div>
-                            <div class="node-label">???</div>
+                        <div class="photo-display-area">
+                            <div id="photo-placeholder" class="photo-placeholder">
+                                <span class="placeholder-icon">📷</span>
+                                <span class="placeholder-text">しゃしんがないよ</span>
+                            </div>
+                            <img id="current-photo" class="current-photo hidden" src="" alt="目的地" />
                         </div>
-                        <div class="map-path"></div>
-                        <div class="map-node" data-cp="1">
-                            <div class="node-icon">🔒</div>
-                            <div class="node-label">???</div>
-                        </div>
-                        <div class="map-path"></div>
-                        <div class="map-node" data-cp="2">
-                            <div class="node-icon">🔒</div>
-                            <div class="node-label">???</div>
-                        </div>
-                        <div class="map-path"></div>
-                        <div class="map-node goal-node" data-cp="goal">
-                            <div class="node-icon">🏠</div>
-                            <div class="node-label">おうち</div>
-                        </div>
-                    </div>
-                    <!-- キャラクター位置マーカー -->
-                    <div id="map-character" class="map-character">
-                        <img id="char-map" src="" alt="" class="map-char-img" />
                     </div>
                 </div>
 
-                <!-- チェックポイントメッセージ -->
+                <!-- 進行状況バー -->
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div id="progress-fill" class="progress-fill" style="width: 0%"></div>
+                    </div>
+                    <div class="progress-steps">
+                        <div class="step-dot active">🏫</div>
+                        <div class="step-dot" id="dot-cp1">🏪</div>
+                        <div class="step-dot" id="dot-cp2">🌳</div>
+                        <div class="step-dot" id="dot-cp3">⛲</div>
+                        <div class="step-dot" id="dot-home">🏠</div>
+                    </div>
+                </div>
+
+                <!-- メッセージ -->
                 <div class="speech-bubble map-bubble">
                     <p id="map-message" class="speech-text"></p>
                 </div>
@@ -142,9 +136,9 @@
                     <div id="items-list" class="items-list"></div>
                 </div>
 
-                <!-- チェックポイントボタン -->
-                <button id="btn-checkpoint" class="btn-primary btn-large">
-                    📍 チェックポイント！
+                <!-- ボタン -->
+                <button id="btn-checkpoint" class="btn-primary btn-large pulse-btn">
+                    📍 いどうする！
                 </button>
             </div>
         </section>
@@ -210,6 +204,23 @@
                         <button id="change-name-btn" class="btn-small">へんこう</button>
                     </div>
                 </div>
+                <div class="setting-item">
+                </div>
+
+                <div class="photo-setting-section">
+                    <h3>🛠️ チェックポイント設定</h3>
+                    <div id="checkpoints-settings-container"></div>
+                    <button id="add-checkpoint-btn" class="btn-secondary" style="margin-top: 10px; width: 100%;">＋
+                        チェックポイントをふやす</button>
+
+                    <div class="photo-upload-group"
+                        style="margin-top: 20px; border-top: 2px dashed #ddd; padding-top: 20px;">
+                        <label>🏠 おうち (ゴール)</label>
+                        <input type="file" id="upload-home" accept="image/*" />
+                        <img id="preview-home" class="preview-thumb hidden" />
+                    </div>
+                </div>
+
                 <div class="setting-item">
                     <label>🔊 おと</label>
                     <label class="toggle">

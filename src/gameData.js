@@ -4,36 +4,44 @@
 
 const BASE = import.meta.env.BASE_URL;
 
-// チェックポイント定義
-export const CHECKPOINTS = [
-    {
-        id: 'cp1',
-        name: 'コンビニ',
-        icon: '🏪',
-        item: '🔑',
-        itemName: 'カギのパーツ１',
-        hint: 'あ！あのおみせの ちかくに ヒントが あるかも！',
-        found: 'やった！カギのパーツ みつけた！',
-    },
-    {
-        id: 'cp2',
-        name: 'おおきな木',
-        icon: '🌳',
-        item: '🔑',
-        itemName: 'カギのパーツ２',
-        hint: 'おおきなきの したを さがしてみよう！',
-        found: 'すごい！もう１つ パーツ ゲット！',
-    },
-    {
-        id: 'cp3',
-        name: 'こうえん',
-        icon: '⛲',
-        item: '🔑',
-        itemName: 'カギのパーツ３',
-        hint: 'あと すこし！こうえんの ちかくだよ！',
-        found: 'カギが かんせい！おうちの ドアを あけよう！',
-    },
+// デフォルトのチェックポイント
+const DEFAULT_CHECKPOINTS = [
+    { id: 'cp1', name: 'コンビニ', hint: 'つぎは コンビニ だよ！', item: 'おにぎり', found: 'コンビニに ついたよ！', itemName: 'おにぎり' },
+    { id: 'cp2', name: 'おおきな木', hint: 'つぎは おおきな木 だよ！', item: 'どんぐり', found: 'おおきな木に ついたよ！', itemName: 'どんぐり' },
+    { id: 'cp3', name: 'こうえん', hint: 'つぎは こうえん だよ！', item: 'おはな', found: 'こうえんに ついたよ！', itemName: 'おはな' }
 ];
+
+export function getCheckpoints() {
+    try {
+        const saved = localStorage.getItem('rescue-checkpoints');
+        if (saved) {
+            return JSON.parse(saved);
+        }
+    } catch (e) {
+        console.error('Failed to load checkpoints', e);
+    }
+    return [...DEFAULT_CHECKPOINTS];
+}
+
+export function saveCheckpoints(list) {
+    try {
+        localStorage.setItem('rescue-checkpoints', JSON.stringify(list));
+    } catch (e) {
+        console.error('Failed to save checkpoints', e);
+    }
+}
+
+export function createCheckpoint(name) {
+    const id = 'cp_' + Date.now();
+    return {
+        id: id,
+        name: name,
+        hint: `つぎは ${name} だよ！`,
+        item: 'キラキラ',
+        found: `${name}に ついたよ！`,
+        itemName: 'キラキラ'
+    };
+}
 
 // キャラクターのセリフ
 export const DIALOGUES = {
@@ -119,4 +127,45 @@ export function loadGameProgress() {
 
 export function resetGameProgress() {
     localStorage.removeItem('rescue-progress');
+}
+
+// おうちの場所（Latitude, Longitude）
+export function saveHomeLocation(lat, lng) {
+    const data = { lat, lng };
+    localStorage.setItem('rescue-home', JSON.stringify(data));
+}
+
+export function loadHomeLocation() {
+    try {
+        const data = JSON.parse(localStorage.getItem('rescue-home'));
+        if (data && data.lat && data.lng) return data;
+    } catch {
+        // ignore
+    }
+    return null;
+}
+
+export function hasHomeLocation() {
+    // Legacy: originally used for map coords, now we check for 'home' image in photo list if needed
+    // But for now let's keep it as is or update logic later.
+    return !!loadHomeLocation();
+}
+
+// 写真データの保存・読み込み
+// id: 'cp1', 'cp2', 'cp3', 'home'
+export function saveCheckpointImage(id, dataUrl) {
+    try {
+        localStorage.setItem(`rescue-photo-${id}`, dataUrl);
+    } catch (e) {
+        console.error('Failed to save image', e);
+        alert('写真の保存に失敗しました。容量オーバーの可能性があります。');
+    }
+}
+
+export function loadCheckpointImage(id) {
+    return localStorage.getItem(`rescue-photo-${id}`);
+}
+
+export function hasCheckpointImage(id) {
+    return !!localStorage.getItem(`rescue-photo-${id}`);
 }
