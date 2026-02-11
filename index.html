@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <meta name="description" content="おうちにGO！レスキュー隊 - お子様がワクワクしながら帰りたくなるレスキューミッションアプリ" />
+    <title>おうちにGO！レスキュー隊</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;700;900&display=swap"
+        rel="stylesheet" />
+    <meta name="theme-color" content="#E53935" />
+</head>
+
+<body>
+    <div id="app">
+
+        <!-- ===== Name Input Modal (初回起動時) ===== -->
+        <div id="name-modal" class="modal hidden">
+            <div class="modal-backdrop"></div>
+            <div class="modal-content name-modal-content">
+                <div class="name-modal-icon">🚒</div>
+                <h2>レスキュー隊員のなまえ</h2>
+                <p class="name-modal-desc">おなまえを いれてね！</p>
+                <input type="text" id="name-input" class="name-input" placeholder="なまえ" maxlength="10" />
+                <button id="name-submit" class="btn-primary btn-large">けってい！</button>
+            </div>
+        </div>
+
+        <!-- ===== Phase 1: ミッション発生！ ===== -->
+        <section id="phase1" class="phase phase-1 hidden">
+            <div class="phase-bg emergency-bg">
+                <div class="emergency-lights"></div>
+                <header class="phase-header">
+                    <h1 class="emergency-title">
+                        <span class="blink">🚨</span>
+                        きんきゅうじたい！
+                        <span class="blink">🚨</span>
+                    </h1>
+                </header>
+
+                <div class="character-area">
+                    <div class="character-frame crying">
+                        <img id="char-crying" src="" alt="レスキューくん" class="character-img" />
+                        <div class="tears tear-left"></div>
+                        <div class="tears tear-right"></div>
+                    </div>
+                </div>
+
+                <div class="speech-bubble sos-bubble">
+                    <p id="sos-message" class="speech-text"></p>
+                </div>
+
+                <button id="btn-dispatch" class="btn-dispatch">
+                    <span class="btn-dispatch-icon">🚒</span>
+                    <span class="btn-dispatch-text">しゅつどう！</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- ===== Phase 2: 出動準備（変身） ===== -->
+        <section id="phase2" class="phase phase-2 hidden">
+            <div class="phase-bg prepare-bg">
+                <header class="phase-header">
+                    <h1 class="phase-title">🔋 しゅつどうじゅんび！</h1>
+                </header>
+
+                <div id="prepare-step" class="prepare-content">
+                    <div class="prepare-icon-area">
+                        <div class="shoe-icon-large">👟</div>
+                    </div>
+                    <p class="prepare-instruction">くつをはいて<br>パワーチャージ！</p>
+                    <button id="btn-shoes-done" class="btn-primary btn-large pulse-btn">
+                        ✅ はいたよ！
+                    </button>
+                </div>
+
+                <div id="transform-step" class="prepare-content hidden">
+                    <div class="character-area">
+                        <div class="character-frame transform-anim">
+                            <img id="char-hero" src="" alt="レスキューくん変身" class="character-img" />
+                        </div>
+                    </div>
+                    <div class="transform-flash"></div>
+                    <p class="transform-text">シャキーン！✨<br>へんしん かんりょう！</p>
+                    <button id="btn-go-mission" class="btn-primary btn-large">
+                        🗺️ ミッション スタート！
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== Phase 3: 移動ミッション ===== -->
+        <section id="phase3" class="phase phase-3 hidden">
+            <div class="phase-bg mission-bg">
+                <header class="phase-header">
+                    <h1 class="phase-title">🗺️ レスキューマップ</h1>
+                </header>
+
+                <!-- すごろく風マップ -->
+                <div class="map-container">
+                    <div class="map-track">
+                        <div class="map-node start-node active" data-cp="start">
+                            <div class="node-icon">🏫</div>
+                            <div class="node-label">スタート</div>
+                        </div>
+                        <div class="map-path"></div>
+                        <div class="map-node" data-cp="0">
+                            <div class="node-icon">🔒</div>
+                            <div class="node-label">???</div>
+                        </div>
+                        <div class="map-path"></div>
+                        <div class="map-node" data-cp="1">
+                            <div class="node-icon">🔒</div>
+                            <div class="node-label">???</div>
+                        </div>
+                        <div class="map-path"></div>
+                        <div class="map-node" data-cp="2">
+                            <div class="node-icon">🔒</div>
+                            <div class="node-label">???</div>
+                        </div>
+                        <div class="map-path"></div>
+                        <div class="map-node goal-node" data-cp="goal">
+                            <div class="node-icon">🏠</div>
+                            <div class="node-label">おうち</div>
+                        </div>
+                    </div>
+                    <!-- キャラクター位置マーカー -->
+                    <div id="map-character" class="map-character">
+                        <img id="char-map" src="" alt="" class="map-char-img" />
+                    </div>
+                </div>
+
+                <!-- チェックポイントメッセージ -->
+                <div class="speech-bubble map-bubble">
+                    <p id="map-message" class="speech-text"></p>
+                </div>
+
+                <!-- アイテム表示 -->
+                <div class="items-collected">
+                    <span class="items-label">あつめたアイテム：</span>
+                    <div id="items-list" class="items-list"></div>
+                </div>
+
+                <!-- チェックポイントボタン -->
+                <button id="btn-checkpoint" class="btn-primary btn-large">
+                    📍 チェックポイント！
+                </button>
+            </div>
+        </section>
+
+        <!-- ===== Phase 4: ミッションコンプリート！ ===== -->
+        <section id="phase4" class="phase phase-4 hidden">
+            <div class="phase-bg complete-bg">
+                <header class="phase-header">
+                    <h1 class="phase-title celebration-title">
+                        🎉 ミッション コンプリート！ 🎉
+                    </h1>
+                </header>
+
+                <div class="character-area">
+                    <div class="character-frame happy-bounce">
+                        <img id="char-happy" src="" alt="レスキューくん嬉しい" class="character-img" />
+                    </div>
+                </div>
+
+                <div class="speech-bubble complete-bubble">
+                    <p id="complete-message" class="speech-text"></p>
+                </div>
+
+                <div id="sticker-reveal" class="sticker-reveal hidden">
+                    <p class="sticker-announce">⭐ きょうのキラキラシール ⭐</p>
+                    <div id="todays-sticker" class="todays-sticker"></div>
+                </div>
+
+                <div class="complete-actions">
+                    <button id="btn-sticker-book" class="btn-secondary">
+                        📖 シールちょう
+                    </button>
+                    <button id="btn-restart" class="btn-secondary">
+                        🔄 もういちど
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== シール帳モーダル ===== -->
+        <div id="sticker-modal" class="modal hidden">
+            <div class="modal-backdrop"></div>
+            <div class="modal-content sticker-modal-content">
+                <h2>📖 キラキラシールちょう</h2>
+                <div id="sticker-grid" class="sticker-grid"></div>
+                <p id="sticker-count" class="sticker-count"></p>
+                <button id="close-sticker-book" class="btn-primary">とじる</button>
+            </div>
+        </div>
+
+        <!-- ===== 設定ボタン ===== -->
+        <button id="settings-btn" class="settings-btn" aria-label="設定">⚙️</button>
+
+        <!-- ===== 設定モーダル ===== -->
+        <div id="settings-modal" class="modal hidden">
+            <div class="modal-backdrop"></div>
+            <div class="modal-content">
+                <h2>⚙️ せってい</h2>
+                <div class="setting-item">
+                    <label>👤 なまえ</label>
+                    <div class="setting-name-area">
+                        <span id="display-name" class="display-name"></span>
+                        <button id="change-name-btn" class="btn-small">へんこう</button>
+                    </div>
+                </div>
+                <div class="setting-item">
+                    <label>🔊 おと</label>
+                    <label class="toggle">
+                        <input type="checkbox" id="sound-toggle" checked />
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="setting-item">
+                    <label>🔄 リセット</label>
+                    <button id="reset-btn" class="btn-danger">きょうのミッションをリセット</button>
+                </div>
+                <button class="btn-primary modal-close" id="close-settings">とじる</button>
+            </div>
+        </div>
+
+        <!-- パーティクル -->
+        <canvas id="particle-canvas" class="particle-canvas"></canvas>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+</body>
+
+</html>
